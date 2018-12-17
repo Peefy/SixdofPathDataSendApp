@@ -50,19 +50,26 @@ namespace SixdofPathDataSendApp.Models
                 return;
             if (datas == null || datas.Length < 18)
                 return;
-            var data = new LandVisionDataPackage()
+            if (double.TryParse(datas[0 + 12], out var x) == true &&
+                double.TryParse(datas[1 + 12], out var y) == true &&
+                double.TryParse(datas[2 + 12], out var z) == true &&
+                double.TryParse(datas[3 + 12], out var roll) == true &&
+                double.TryParse(datas[4 + 12], out var yaw) == true &&
+                double.TryParse(datas[5 + 12], out var pitch) == true)
             {
-                X = (short)(double.Parse(datas[0 + 12]) / config.XYZScale),
-                Y = (short)(double.Parse(datas[1 + 12]) / config.XYZScale),
-                Z = (short)(double.Parse(datas[2 + 12]) / config.XYZScale),
-                Roll = (short)(double.Parse(datas[3 + 12]) / config.XYZScale),
-                Pitch = (short)(double.Parse(datas[5 + 12]) / config.XYZScale)
-            };
-            data.Crc = LandVisionDataPackage.CalCrc(data);
-            var bytes = data.GetBytes(config.SendHeader, config.SendTail);
-            serialPort.Write(bytes, 0, bytes.Length);
+                var data = new LandVisionDataPackage()
+                {
+                    X = (short)(x / config.XYZScale),
+                    Y = (short)(y / config.XYZScale),
+                    Z = (short)(z / config.XYZScale),
+                    Roll = (short)(roll / config.XYZScale),
+                    Pitch = (short)(pitch / config.XYZScale)
+                };
+                data.Crc = LandVisionDataPackage.CalCrc(data);
+                var bytes = data.GetBytes(config.SendHeader, config.SendTail);
+                serialPort.Write(bytes, 0, bytes.Length);
+            }
         }
-
     }
 }
 
