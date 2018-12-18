@@ -24,6 +24,16 @@ namespace SixdofPathDataSendApp.Models
         public ushort Crc;
         public byte Tail;
 
+        public static ushort CalCrc(byte[] bytes, int startIndex, int length)
+        {
+            ushort crc = 0;
+            for (int i = startIndex; i < startIndex + length; ++i)
+            {
+                crc += bytes[i];
+            }
+            return crc;
+        }
+
         public static ushort CalCrc(LandVisionDataPackage data)
         {
             ushort crc = 0;
@@ -79,6 +89,26 @@ namespace SixdofPathDataSendApp.Models
                 (byte)(Crc >> 8),
                 Tail = tail
             };
+        }
+
+        public void SetBytes(byte[] bytes)
+        {
+            Header = bytes[0];
+            X = (short)(bytes[1] + bytes[2] << 8);
+            Y = (short)(bytes[3] + bytes[4] << 8);
+            Z = (short)(bytes[5] + bytes[6] << 8);
+            XAcc = (short)(bytes[7] + bytes[8] << 8);
+            YAcc = (short)(bytes[9] + bytes[10] << 8);
+            RoadTypeBefore = bytes[11];
+            RoadType = bytes[12];
+            Pitch = (short)(bytes[13] + bytes[14] << 8);
+            Roll = (short)(bytes[15] + bytes[16] << 8);
+            ControlByte = bytes[17];
+            NoneByte = bytes[18];
+            CmdPcDataAcksByte = bytes[19];
+            FunctionsByte = bytes[20];
+            Crc = (ushort)(bytes[21] + bytes[22] << 8);
+            Tail = bytes[23];
         }
     }
 }
