@@ -80,7 +80,6 @@ namespace SixdofPathDataSendApp
                 recieveThread = new Thread(new ThreadStart(() => {
                     while (true)
                     {
-                        File.AppendAllText(fileNameRecieve, "0 0 0 0\r\n");
                         DataPackageSender.Instance.RecieveAndRecord(fileNameRecieve, isRecieve);
                         Thread.Sleep(40);
                     }
